@@ -2,6 +2,7 @@ package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
 import com.platform.dto.CryptoDto;
+import com.platform.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,12 +23,16 @@ public class CryptoService {
     }
 
     public List<CryptoDto> getTopCoins() {
-        return webClient.get()
+        List<CryptoDto> coins = webClient.get()
                 .uri(externalApiProperties.getCrypto().getBaseUrl())
                 .retrieve()
                 .bodyToFlux(CryptoDto.class)
                 .collectList()
                 .block();
+        if (coins == null ||coins.isEmpty()) {
+            throw new ResourceNotFoundException("No coins found.");
+        }
+        return coins;
     }
 }
 

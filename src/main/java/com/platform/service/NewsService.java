@@ -2,6 +2,7 @@ package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
 import com.platform.dto.NewsDto;
+import com.platform.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -24,7 +25,7 @@ public class NewsService {
 
     public NewsDto getNews(String topic) {
         String apiKey = externalApiProperties.getNews().getApiKey();
-        return webClient.get()
+        NewsDto news = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/everything")
                         .queryParam("q", topic)
@@ -34,6 +35,10 @@ public class NewsService {
                 .retrieve()
                 .bodyToMono(NewsDto.class)
                 .block();
+        if (news == null || news.getArticles().isEmpty()) {
+            throw new ResourceNotFoundException("No news found for topic: " + topic);
+        }
+        return news;
     }
 }
 

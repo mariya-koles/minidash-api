@@ -1,5 +1,6 @@
 package com.platform.controller;
 
+import com.platform.dto.NewsDto;
 import com.platform.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,8 @@ public class NewsController {
                     @ApiResponse(responseCode = "500", description = "Error retrieving news data")
             }
     )
-    public ResponseEntity<?> getNews(@RequestParam String topic) {
-        return ResponseEntity.ok(newsService.getNews(topic));
+    public ResponseEntity<NewsDto> getNews(@RequestParam String topic) {
+        NewsDto news = newsService.getNews(topic);
+        return ResponseEntity.ok(news);
     }
 }

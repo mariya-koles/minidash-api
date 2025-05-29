@@ -2,11 +2,10 @@ package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
 import com.platform.dto.WeatherDto;
+import com.platform.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -26,7 +25,7 @@ public class WeatherService {
     public WeatherDto getWeatherForCity(String city) {
         String apiKey = externalApiProperties.getWeather().getApiKey();
 
-        Map<String, Object> response = webClient.get()
+        WeatherDto weather = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/weather")
                         .queryParam("q", city)
@@ -34,25 +33,11 @@ public class WeatherService {
                         .queryParam("units", "metric")
                         .build())
                 .retrieve()
-                .bodyToMono(Map.class)
+                .bodyToMono(WeatherDto.class)
                 .block();
-
-        String cityName = (String) response.get("name");
-
-        Map<String, Object> main = (Map<String, Object>) response.get("main");
-        double temp = main != null ? ((Number) main.get("temp")).doubleValue() : 0.0;
-
-        List<Map<String, Object>> weatherList = (List<Map<String, Object>>) response.get("weather");
-        Map<String, Object> weather = (weatherList != null && !weatherList.isEmpty()) ? weatherList.get(0) : Map.of();
-
-        String description = (String) weather.get("description");
-        String icon = (String) weather.get("icon");
-
-        return WeatherDto.builder()
-                .city(cityName)
-                .description(description)
-                .temperature(temp)
-                .icon(icon)
-                .build();
+        if (weather == null) {
+            throw new ResourceNotFoundException("No weather found for city: " + city);
+        }
+        return weather;
     }
 }

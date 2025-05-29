@@ -4,35 +4,43 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllExceptions(Exception ex, WebRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(
-                Map.of(
-                        "timestamp", LocalDateTime.now(),
-                        "message", ex.getMessage(),
-                        "path", request.getDescription(false)
-                ),
-                HttpStatus.INTERNAL_SERVER_ERROR
+                new ApiError(LocalDateTime.now(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.NOT_FOUND
         );
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
         return new ResponseEntity<>(
-                Map.of(
-                        "timestamp", LocalDateTime.now(),
-                        "message", ex.getMessage(),
-                        "path", request.getDescription(false)
-                ),
-                HttpStatus.NOT_FOUND
+                new ApiError(LocalDateTime.now(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<ApiError> handleHttpClientError(HttpClientErrorException ex, WebRequest request) {
+        return new ResponseEntity<>(
+                new ApiError(LocalDateTime.now(), ex.getMessage(), request.getDescription(false)),
+                ex.getStatusCode()
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleAllExceptions(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(
+                new ApiError(LocalDateTime.now(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 }

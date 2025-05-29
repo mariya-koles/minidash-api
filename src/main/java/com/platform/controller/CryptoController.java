@@ -1,5 +1,6 @@
 package com.platform.controller;
 
+import com.platform.dto.CryptoDto;
 import com.platform.service.CryptoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +28,9 @@ public class CryptoController {
                     @ApiResponse(responseCode = "500", description = "Failed to retrieve data")
             }
     )
-    public ResponseEntity<?> getTopCoins() {
-        return ResponseEntity.ok(cryptoService.getTopCoins());
+    public ResponseEntity<List<CryptoDto>> getTopCoins() {
+        List<CryptoDto> coins = cryptoService.getTopCoins();
+        return ResponseEntity.ok(coins);
     }
 
 }

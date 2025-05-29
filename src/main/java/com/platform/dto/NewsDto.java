@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@Schema(description = "News data returned from the API")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
