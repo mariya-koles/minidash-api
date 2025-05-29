@@ -1,6 +1,7 @@
 package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
+import com.platform.dto.NewsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -46,20 +48,27 @@ class NewsServiceTest {
     }
 
     @Test
-    void getNews_shouldReturnResponseMap() {
+    void getNews_shouldReturnNewsResponse() {
         String topic = "Java";
 
-        Map<String, Object> mockResponse = Map.of(
-                "status", "ok",
-                "totalResults", 1
-        );
+        NewsDto.Article article = new NewsDto.Article();
+        article.setTitle("Java 21 Released");
+        article.setAuthor("OpenJDK Team");
+        article.setUrl("https://example.com/java-21");
+        article.setPublishedAt("2025-05-29T12:00:00Z");
+
+        NewsDto expectedResponse = new NewsDto();
+        expectedResponse.setStatus("ok");
+        expectedResponse.setTotalResults(1);
+        expectedResponse.setArticles(List.of(article));
 
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Object.class)).thenReturn(Mono.just(mockResponse));
+        when(responseSpec.bodyToMono(NewsDto.class)).thenReturn(Mono.just(expectedResponse));
 
-        Object result = newsService.getNews(topic);
-        assertEquals(mockResponse, result);
+        NewsDto actualResponse = newsService.getNews(topic);
+        assertEquals(expectedResponse, actualResponse);
     }
+
 }

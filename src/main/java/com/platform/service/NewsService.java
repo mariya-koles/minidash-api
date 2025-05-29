@@ -22,7 +22,7 @@ public class NewsService {
                 .build();
     }
 
-    public Object getNews(String topic) {
+    public NewsDto getNews(String topic) {
         String apiKey = externalApiProperties.getNews().getApiKey();
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
