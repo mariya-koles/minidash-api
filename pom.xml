@@ -88,6 +88,13 @@
             <version>6.1.14</version>
         </dependency>
 
+        <!--- Caffeine, an in-memory cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+
 
     </dependencies>
 
