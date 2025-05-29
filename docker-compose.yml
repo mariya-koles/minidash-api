@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  minidash-api:
+    image: minidash-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minidash-api
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
