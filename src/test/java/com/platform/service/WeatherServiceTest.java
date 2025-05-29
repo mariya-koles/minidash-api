@@ -62,44 +62,35 @@ class WeatherServiceTest {
     @Test
     void testGetWeatherForCity_shouldReturnDto() {
         String city = "London";
-        String apiKey = "fake-api-key";
 
-        // Geocoding API mock response
-        List<Map<String, Object>> geoResponse = List.of(Map.of(
-                "lat", 51.5074,
-                "lon", -0.1278
-        ));
-
-        // One Call API mock "current" weather response
-        Map<String, Object> current = Map.of(
-                "temp", 22.5,
-                "feels_like", 23.0,
-                "humidity", 50,
-                "wind_speed", 15.0,
+        // Simulated OpenWeather API response body
+        Map<String, Object> apiResponse = Map.of(
+                "name", "London",
+                "main", Map.of(
+                        "temp", 22.5,
+                        "feels_like", 23.0,
+                        "humidity", 50
+                ),
+                "wind", Map.of(
+                        "speed", 15.0
+                ),
                 "weather", List.of(Map.of(
                         "description", "clear sky",
                         "icon", "01d"
                 ))
         );
 
-        Map<String, Object> weatherApiResponse = Map.of("current", current);
-
-        // Mock WebClient calls for both requests
+        // Mock the WebClient behavior
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpec);
         Mockito.when(requestHeadersUriSpec.uri(any(String.class))).thenReturn(requestHeadersSpec);
         Mockito.when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-
-        // Return geocoding first, then weather
-        Mockito.when(responseSpec.bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {}))
-                .thenReturn(Mono.just(geoResponse));
-
         Mockito.when(responseSpec.bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {}))
-                .thenReturn(Mono.just(weatherApiResponse));
+                .thenReturn(Mono.just(apiResponse));
 
-        // Act
+        // Call the method
         WeatherDto result = weatherService.getWeatherForCity(city);
 
-        // Assert
+        // Validate the result
         assertEquals("London", result.getCity());
         assertEquals(22.5, result.getTemperature());
         assertEquals(23.0, result.getFeelsLike());
@@ -108,5 +99,6 @@ class WeatherServiceTest {
         assertEquals("clear sky", result.getCondition());
         assertEquals("01d", result.getIcon());
     }
+
 
 }

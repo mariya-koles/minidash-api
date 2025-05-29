@@ -29,27 +29,27 @@ class WeatherControllerTest {
     @Test
     void getWeather_shouldReturnWeatherDto() throws Exception {
         WeatherDto mockResponse = WeatherDto.builder()
-                .city("London")
-                .temperature(25.0)
-                .feelsLike(26.3)
-                .humidity(50)
-                .windSpeed(12.5)
-                .condition("Sunny")
+                .city("Houston")
+                .temperature(27.0)
+                .feelsLike(26.2)
+                .humidity(55)
+                .windSpeed(4.1)
+                .condition("clear sky")
                 .icon("01d")
                 .build();
 
-        Mockito.when(weatherService.getWeatherForCity(eq("London")))
+        Mockito.when(weatherService.getWeatherForCity(eq("Houston")))
                 .thenReturn(mockResponse);
 
         mockMvc.perform(get("/api/weather")
-                        .param("city", "London"))
+                        .param("city", "Houston"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.city").value("London"))
-                .andExpect(jsonPath("$.temperature").value(25.0))
-                .andExpect(jsonPath("$.feelsLike").value(26.3))
-                .andExpect(jsonPath("$.humidity").value(50))
-                .andExpect(jsonPath("$.windSpeed").value(12.5))
-                .andExpect(jsonPath("$.condition").value("Sunny"))
+                .andExpect(jsonPath("$.city").value("Houston"))
+                .andExpect(jsonPath("$.temperature").value(27.0))
+                .andExpect(jsonPath("$.feelsLike").value(26.2))
+                .andExpect(jsonPath("$.humidity").value(55))
+                .andExpect(jsonPath("$.windSpeed").value(4.1))
+                .andExpect(jsonPath("$.condition").value("clear sky"))
                 .andExpect(jsonPath("$.icon").value("01d"));
     }
 }

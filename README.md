@@ -52,7 +52,8 @@ Secrets and external base URLs are managed in `application.properties` using:
 
 ```properties
 external.weather.api-key=your_openweather_api_key
-external.weather.base-url=https://api.openweathermap.org/data/2.5
+external.weather.additional-url=https://api.openweathermap.org/geo/1.0/direct
+external.weather.base-url=https://api.openweathermap.org/data/3.0/onecall
 
 external.news.api-key=your_news_api_key
 external.news.base-url=https://newsapi.org/v2
