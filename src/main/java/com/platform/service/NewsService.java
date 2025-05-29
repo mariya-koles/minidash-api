@@ -1,6 +1,7 @@
 package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
+import com.platform.dto.NewsDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -31,7 +32,7 @@ public class NewsService {
                         .queryParam("language", "en")
                         .build())
                 .retrieve()
-                .bodyToMono(Object.class)
+                .bodyToMono(NewsDto.class)
                 .block();
     }
 }
