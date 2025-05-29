@@ -1,16 +1,26 @@
 package com.platform.service;
 
+import com.platform.config.ExternalApiProperties;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+
 @Service
+@RequiredArgsConstructor
 public class NewsService {
 
-    private final WebClient webClient;
 
-    public NewsService() {
+    private final ExternalApiProperties externalApiProperties;
+
+    private WebClient webClient;
+
+
+    @PostConstruct
+    public void init() {
         this.webClient = WebClient.builder()
-                .baseUrl("https://newsapi.org/v2")
+                .baseUrl(externalApiProperties.getNews().getBaseUrl())
                 .build();
     }
 
