@@ -2,15 +2,13 @@ package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
 import com.platform.dto.WeatherDto;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
+
 @Service
 public class WeatherService {
 
@@ -18,15 +16,15 @@ public class WeatherService {
 
     private WebClient webClient;
 
-    @PostConstruct
-    public void init() {
-        this.webClient = WebClient.builder()
+    public WeatherService(ExternalApiProperties externalApiProperties, WebClient.Builder builder) {
+        this.externalApiProperties = externalApiProperties;
+        this.webClient = builder
                 .baseUrl(externalApiProperties.getWeather().getBaseUrl())
                 .build();
     }
 
     public WeatherDto getWeatherForCity(String city) {
-        String apiKey = System.getenv("OPENWEATHER_API_KEY");
+        String apiKey = externalApiProperties.getWeather().getApiKey();
 
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder

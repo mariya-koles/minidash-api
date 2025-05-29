@@ -1,14 +1,11 @@
 package com.platform.service;
 
 import com.platform.config.ExternalApiProperties;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Service
-@RequiredArgsConstructor
 public class NewsService {
 
 
@@ -17,15 +14,15 @@ public class NewsService {
     private WebClient webClient;
 
 
-    @PostConstruct
-    public void init() {
-        this.webClient = WebClient.builder()
+    public NewsService(ExternalApiProperties externalApiProperties, WebClient.Builder builder) {
+        this.externalApiProperties = externalApiProperties;
+        this.webClient = builder
                 .baseUrl(externalApiProperties.getNews().getBaseUrl())
                 .build();
     }
 
     public Object getNews(String topic) {
-        String apiKey = "YOUR_NEWS_API_KEY"; // 🔐 Replace with a real API key
+        String apiKey = externalApiProperties.getNews().getApiKey();
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/everything")
