@@ -3,6 +3,8 @@ package com.platform.controller;
 import com.platform.dto.WeatherDto;
 import com.platform.service.WeatherService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @RequestMapping("/api/weather")
 public class WeatherController {
 
+    private static Logger log = LoggerFactory.getLogger(WeatherController.class);
     private final WeatherService weatherService;
 
 

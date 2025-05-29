@@ -5,11 +5,13 @@ import com.platform.dto.NewsDto;
 import com.platform.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class NewsService {
 
+    private static final Logger log = LoggerFactory.getLogger(NewsService.class);
 
     private final ExternalApiProperties externalApiProperties;
 

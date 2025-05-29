@@ -2,13 +2,15 @@ package com.platform.controller;
 
 import com.platform.dto.CryptoDto;
 import com.platform.service.CryptoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/crypto")
 public class CryptoController {
 
-
+    private static Logger log = LoggerFactory.getLogger(CryptoController.class);
     private final CryptoService cryptoService;
 
     @GetMapping("/top")
