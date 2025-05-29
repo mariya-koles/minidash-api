@@ -1,5 +1,6 @@
 package com.platform.controller;
 
+import com.platform.dto.CryptoDto;
 import com.platform.service.CryptoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,12 +26,12 @@ class CryptoControllerTest {
 
     @Test
     void getTopCoins_shouldReturnTopFive() throws Exception {
-        List<Map<String, Object>> mockResponse = List.of(
-                Map.of("symbol", "btc"),
-                Map.of("symbol", "eth"),
-                Map.of("symbol", "bnb"),
-                Map.of("symbol", "sol"),
-                Map.of("symbol", "xrp")
+        List<CryptoDto> mockResponse = List.of(
+                createCrypto("btc"),
+                createCrypto("eth"),
+                createCrypto("bnb"),
+                createCrypto("sol"),
+                createCrypto("xrp")
         );
 
         when(cryptoService.getTopCoins()).thenReturn(mockResponse);
@@ -43,5 +43,12 @@ class CryptoControllerTest {
                 .andExpect(jsonPath("$[2].symbol").value("bnb"))
                 .andExpect(jsonPath("$[3].symbol").value("sol"))
                 .andExpect(jsonPath("$[4].symbol").value("xrp"));
+    }
+
+    // Helper method
+    private CryptoDto createCrypto(String symbol) {
+        CryptoDto dto = new CryptoDto();
+        dto.setSymbol(symbol);
+        return dto;
     }
 }
