@@ -15,6 +15,7 @@ public class ExternalApiProperties {
     @Data
     public static class Api {
         private String baseUrl;
+        private String additionalUrl;
         private String apiKey;
     }
 }

@@ -14,7 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class WeatherDto {
     private String city;
-    private String description;
     private double temperature;
+    private double feelsLike;
+    private int humidity;
+    private double windSpeed;
+    private String condition;
     private String icon;
 }

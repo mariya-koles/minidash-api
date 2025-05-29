@@ -30,8 +30,11 @@ class WeatherControllerTest {
     void getWeather_shouldReturnWeatherDto() throws Exception {
         WeatherDto mockResponse = WeatherDto.builder()
                 .city("London")
-                .description("Sunny")
                 .temperature(25.0)
+                .feelsLike(26.3)
+                .humidity(50)
+                .windSpeed(12.5)
+                .condition("Sunny")
                 .icon("01d")
                 .build();
 
@@ -42,8 +45,11 @@ class WeatherControllerTest {
                         .param("city", "London"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.city").value("London"))
-                .andExpect(jsonPath("$.description").value("Sunny"))
                 .andExpect(jsonPath("$.temperature").value(25.0))
+                .andExpect(jsonPath("$.feelsLike").value(26.3))
+                .andExpect(jsonPath("$.humidity").value(50))
+                .andExpect(jsonPath("$.windSpeed").value(12.5))
+                .andExpect(jsonPath("$.condition").value("Sunny"))
                 .andExpect(jsonPath("$.icon").value("01d"));
     }
 }
